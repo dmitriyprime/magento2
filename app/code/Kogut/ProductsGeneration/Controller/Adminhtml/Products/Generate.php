@@ -104,12 +104,12 @@ class Generate extends Action implements HttpGetActionInterface
 
         $categories = $this->categoryList->getList($searchCriteria)->getItems();
 
-        if($categories) {
-            $categoryId = $categories[0]->getId();
+        if(!empty($categories)) {
+            $categoryId = (int) $categories[0]->getId();
         } else {
-            $this->createCategoryService->createCategory($categoryName);
-            $categories = $this->categoryList->getList($searchCriteria)->getItems();
-            $categoryId = $categories[0]->getId();
+            $createdCategory = $this->createCategoryService->createCategory($categoryName);
+            $this->messageManager->addSuccessMessage(__('Category ' . $createdCategory->getName() . ' is created.'));
+            $categoryId = (int) $createdCategory->getId();
         }
 
         for($i = 0; $i < $productsQtyToGenerate; $i++) {

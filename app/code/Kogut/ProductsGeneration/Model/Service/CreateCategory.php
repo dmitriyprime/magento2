@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Kogut\ProductsGeneration\Model\Service;
 
+use Magento\Catalog\Model\Category;
 use Magento\Catalog\Model\CategoryFactory;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
-use Magento\Framework\Message\ManagerInterface;
 
 class CreateCategory
 {
@@ -20,27 +20,21 @@ class CreateCategory
      */
     private $categoryRepository;
 
-    /**
-     * @var ManagerInterface
-     */
-    private $messageManager;
-
     public function __construct(
         CategoryFactory $categoryFactory,
-        CategoryRepositoryInterface $categoryRepository,
-        ManagerInterface $messageManager
+        CategoryRepositoryInterface $categoryRepository
     ) {
         $this->categoryFactory = $categoryFactory;
         $this->categoryRepository = $categoryRepository;
-        $this->messageManager = $messageManager;
     }
 
     /**
      * Creates category
-     * @param $categoryName
+     * @param string $categoryName
+     * @return Category
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function createCategory($categoryName)
+    public function createCategory(string $categoryName): Category
     {
         $category = $this->categoryFactory->create();
         $category->setName($categoryName);
@@ -48,6 +42,7 @@ class CreateCategory
         $category->setIsActive(true);
         $category->setIncludeInMenu(true);
         $this->categoryRepository->save($category);
-        $this->messageManager->addSuccessMessage(__('Category ' . $category->getName() . ' is created.'));
+
+        return $category;
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kogut\ProductsGeneration\Model\Service;
 
+use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Api\CategoryLinkManagementInterface;
@@ -43,21 +44,21 @@ class CreateProduct
 
     /**
      * Create test simple product service
-     * @param $categoryId
+     * @param int $categoryId
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\StateException
      */
-    public function createSimpleProduct($categoryId)
+    public function createSimpleProduct(int $categoryId): void
     {
         $product = $this->productFactory->create();
         $productSku = 'testSku' . microtime();
         $product->setSku($productSku);
         $product->setName('testName' . microtime());
-        $product->setAttributeSetId(4);
+        $product->setAttributeSetId($product->getDefaultAttributeSetId());
         $product->setStatus(1);
         $product->setWeight(10);
-        $product->setVisibility(4);
+        $product->setVisibility(Visibility::VISIBILITY_BOTH);
         $product->setTaxClassId(0);
         $product->setTypeId('simple');
         $product->setPrice(9.99);
