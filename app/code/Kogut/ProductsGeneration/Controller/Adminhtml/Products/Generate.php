@@ -13,6 +13,7 @@ use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Kogut\ProductsGeneration\Model\Config\Settings;
+use Kogut\ProductsGeneration\Model\Service\AddItemForProductGenerationByCron;
 
 class Generate extends Action implements HttpGetActionInterface
 {
@@ -44,12 +45,18 @@ class Generate extends Action implements HttpGetActionInterface
     private $searchCategoryByNameService;
 
     /**
+     * @var AddItemForProductGenerationByCron
+     */
+    private $addItemForProductGenerationByCronService;
+
+    /**
      * @param Context $context
      * @param RedirectFactory $resultRedirectFactory
      * @param CreateProduct $createProductService
      * @param CreateCategory $createCategoryService
      * @param Settings $config
      * @param SearchCategoryByName $searchCategoryByNameService
+     * @param AddItemForProductGenerationByCron $addItemForProductGenerationByCronService
      */
     public function __construct(
         Context $context,
@@ -57,7 +64,8 @@ class Generate extends Action implements HttpGetActionInterface
         CreateProduct $createProductService,
         CreateCategory $createCategoryService,
         Settings $config,
-        SearchCategoryByName $searchCategoryByNameService
+        SearchCategoryByName $searchCategoryByNameService,
+        AddItemForProductGenerationByCron $addItemForProductGenerationByCronService
     ) {
         parent::__construct($context);
         $this->resultRedirectFactory = $resultRedirectFactory;
@@ -65,6 +73,7 @@ class Generate extends Action implements HttpGetActionInterface
         $this->createProductService = $createProductService;
         $this->createCategoryService = $createCategoryService;
         $this->searchCategoryByNameService = $searchCategoryByNameService;
+        $this->addItemForProductGenerationByCronService = $addItemForProductGenerationByCronService;
     }
 
     /**
@@ -86,11 +95,16 @@ class Generate extends Action implements HttpGetActionInterface
             $categoryId = (int) $createdCategory->getId();
         }
 
-        for($i = 0; $i < $productsQtyToGenerate; $i++) {
-            $this->createProductService->createSimpleProduct($categoryId);
+        if($productsQtyToGenerate <= 100) {
+            for($i = 0; $i < $productsQtyToGenerate; $i++) {
+                $this->createProductService->createSimpleProduct($categoryId);
+            }
+            $this->messageManager->addSuccessMessage(__("$productsQtyToGenerate new products are generated"));
+        } else {
+            $this->addItemForProductGenerationByCronService->addItemToSchedule($categoryId, $productsQtyToGenerate);
+            $successMessageText = "$productsQtyToGenerate products are scheduled for generation by cron job.";
+            $this->messageManager->addSuccessMessage(__($successMessageText));
         }
-        $this->messageManager->addSuccessMessage(__("$productsQtyToGenerate new products are generated"));
-
         /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setPath('catalog/product/index');

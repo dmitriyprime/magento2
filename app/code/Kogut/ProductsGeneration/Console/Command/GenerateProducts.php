@@ -16,6 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Kogut\ProductsGeneration\Model\Service\CreateCategory;
 use Kogut\ProductsGeneration\Model\Service\CreateProduct;
 use Kogut\ProductsGeneration\Model\Service\SearchCategoryByName;
+use Kogut\ProductsGeneration\Model\Service\AddItemForProductGenerationByCron;
 
 /**
  * Class GenerateProducts
@@ -51,24 +52,33 @@ class GenerateProducts extends Command
     private $appState;
 
     /**
+     * @var AddItemForProductGenerationByCron
+     */
+    private $addItemForProductGenerationByCronService;
+
+
+    /**
      * @param Settings $config
      * @param CreateProduct $createProductService
      * @param CreateCategory $createCategoryService
      * @param SearchCategoryByName $searchCategoryByNameService
      * @param State $appState
+     * @param AddItemForProductGenerationByCron $addItemForProductGenerationByCronService
      */
     public function __construct(
         Settings $config,
         CreateProduct $createProductService,
         CreateCategory $createCategoryService,
         SearchCategoryByName $searchCategoryByNameService,
-        State $appState
+        State $appState,
+        AddItemForProductGenerationByCron $addItemForProductGenerationByCronService
     ) {
         $this->config = $config;
         $this->createProductService = $createProductService;
         $this->createCategoryService = $createCategoryService;
         $this->searchCategoryByNameService = $searchCategoryByNameService;
         $this->appState = $appState;
+        $this->addItemForProductGenerationByCronService = $addItemForProductGenerationByCronService;
         parent::__construct();
     }
 
@@ -88,11 +98,11 @@ class GenerateProducts extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->appState->setAreaCode(Area::AREA_GLOBAL);
+        $this->appState->setAreaCode(Area::AREA_ADMINHTML);
         $categoryNameConfig = $this->config->getCategoryName();
         $productsQtyToGenerateConfig = $this->config->getProductsQtyToGenerate();
 
-        $qty = $input->getOption(self::PRODUCTS_QTY_TO_GENERATE) ?? $productsQtyToGenerateConfig;
+        $qty = (int) $input->getOption(self::PRODUCTS_QTY_TO_GENERATE) ?? $productsQtyToGenerateConfig;
         $categoryName = $input->getOption(self::CATEGORY_NAME_TO_ASSIGN_THE_PRODUCTS) ?? $categoryNameConfig;
 
         $categories = $this->searchCategoryByNameService->search($categoryName);
@@ -105,11 +115,17 @@ class GenerateProducts extends Command
         }
 
         try {
-            for($i = 0; $i < $qty; $i++) {
-                $this->createProductService->createSimpleProduct($categoryId);
+            if($qty <= 100) {
+                for($i = 0; $i < $qty; $i++) {
+                    $this->createProductService->createSimpleProduct($categoryId);
+                }
+                $output->writeln("<info>$qty products are generated in category $categoryName.</info>");
+                return Cli::RETURN_SUCCESS;
+            } else {
+                $this->addItemForProductGenerationByCronService->addItemToSchedule($categoryId, $qty);
+                $output->writeln("<info>$qty products are scheduled for generation by cron job.</info>");
+                return Cli::RETURN_SUCCESS;
             }
-            $output->writeln("<info>$qty products are generated in category $categoryName.</info>");
-            return Cli::RETURN_SUCCESS;
         } catch (Exception $exception) {
             $output->writeln("");
             $output->writeln("<error>{$exception->getMessage()}</error>");
