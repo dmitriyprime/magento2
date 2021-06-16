@@ -9,7 +9,7 @@ use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Magento\Framework\UrlInterface;
 
 /**
- * Generate Products Button
+ * Generate Products button data provider class
  */
 class GenerateProductsButton implements ButtonProviderInterface
 {
@@ -29,6 +29,7 @@ class GenerateProductsButton implements ButtonProviderInterface
 
     /**
      * @param UrlInterface $urlBuilder
+     * @param Settings $config
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -39,14 +40,13 @@ class GenerateProductsButton implements ButtonProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getButtonData()
     {
-        $message = sprintf(
-            __("Are you sure you want to generate %s products?")->render(),
-            $this->config->getProductsQtyToGenerate()
-        );
+        $message = __("Are you sure you want to generate %1 products?", $this->config->getProductsQtyToGenerate())
+            ->render();
+
         return [
             'label' => __('Generate products'),
             'sort_order' => '5',

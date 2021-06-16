@@ -15,11 +15,13 @@ class GenerationItem extends AbstractDb
     const ID_FIELD_NAME_FOR_PRODUCTS_GENERATION_TABLE = 'entity_id';
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     protected function _construct(): void
     {
-        $this->_init(self::TABLE_NAME_PRODUCTS_GENERATION,
-            self::ID_FIELD_NAME_FOR_PRODUCTS_GENERATION_TABLE);
+        $this->_init(
+            self::TABLE_NAME_PRODUCTS_GENERATION,
+            self::ID_FIELD_NAME_FOR_PRODUCTS_GENERATION_TABLE
+        );
     }
 }

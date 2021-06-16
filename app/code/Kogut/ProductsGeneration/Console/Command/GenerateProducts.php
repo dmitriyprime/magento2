@@ -19,7 +19,7 @@ use Kogut\ProductsGeneration\Model\Service\SearchCategoryByName;
 use Kogut\ProductsGeneration\Model\Service\AddItemForProductGenerationByCron;
 
 /**
- * Class GenerateProducts
+ * Defines CLI command for products generation
  */
 class GenerateProducts extends Command
 {
@@ -56,7 +56,6 @@ class GenerateProducts extends Command
      */
     private $addItemForProductGenerationByCronService;
 
-
     /**
      * @param Settings $config
      * @param CreateProduct $createProductService
@@ -83,7 +82,7 @@ class GenerateProducts extends Command
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function configure()
     {
@@ -94,7 +93,7 @@ class GenerateProducts extends Command
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -107,7 +106,7 @@ class GenerateProducts extends Command
 
         $categories = $this->searchCategoryByNameService->search($categoryName);
 
-        if(!empty($categories)) {
+        if (!empty($categories)) {
             $categoryId = (int) $categories[0]->getId();
         } else {
             $createdCategory = $this->createCategoryService->createCategory($categoryName);
@@ -115,8 +114,8 @@ class GenerateProducts extends Command
         }
 
         try {
-            if($qty <= 100) {
-                for($i = 0; $i < $qty; $i++) {
+            if ($qty <= 100) {
+                for ($i = 0; $i < $qty; $i++) {
                     $this->createProductService->createSimpleProduct($categoryId);
                 }
                 $output->writeln("<info>$qty products are generated in category $categoryName.</info>");

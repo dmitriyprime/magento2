@@ -25,7 +25,6 @@ class GenerateProducts
      */
     private $generationItemResource;
 
-
     /**
      * @param CollectionFactory $itemsCollectionFactory
      * @param CreateProduct $createProductService
@@ -42,7 +41,7 @@ class GenerateProducts
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function execute()
     {
@@ -52,7 +51,7 @@ class GenerateProducts
             $itemsCount = $item->getData('qty');
             $categoryId = (int) $item->getData('category_id');
 
-            for($i = 0; $i < $itemsCount; $i++) {
+            for ($i = 0; $i < $itemsCount; $i++) {
                 $this->createProductService->createSimpleProduct($categoryId);
             }
 
