@@ -18,18 +18,18 @@ class DataProvider extends AbstractDataProvider
     private $dataPersistor;
 
     /**
-     * @param $name
-     * @param $primaryFieldName
-     * @param $requestFieldName
+     * @param string $name
+     * @param string $primaryFieldName
+     * @param string $requestFieldName
      * @param CollectionFactory $collectionFactory
      * @param DataPersistorInterface $dataPersistor
      * @param array $meta
      * @param array $data
      */
     public function __construct(
-        $name,
-        $primaryFieldName,
-        $requestFieldName,
+        string $name,
+        string $primaryFieldName,
+        string $requestFieldName,
         CollectionFactory $collectionFactory,
         DataPersistorInterface $dataPersistor,
         array $meta = [],
@@ -41,7 +41,8 @@ class DataProvider extends AbstractDataProvider
     }
 
     /**
-     * Get data
+     * Gets form data
+     *
      * @return array
      */
     public function getData()
@@ -56,6 +57,7 @@ class DataProvider extends AbstractDataProvider
             $block->setData($data);
             $this->loadedData[$block->getId()] = $block->getData();
             $this->dataPersistor->clear('dmitriyprime_vendor');
+
             return $this->loadedData;
         }
 

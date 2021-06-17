@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Dmitriyprime\Vendor\Controller\Adminhtml\Index;
 
-use Dmitriyprime\Vendor\Model\ResourceModel\Vendor;
+use Dmitriyprime\Vendor\Model\ResourceModel\Vendor as VendorResource;
+use Dmitriyprime\Vendor\Model\Vendor;
 use Dmitriyprime\Vendor\Model\VendorFactory;
 use Magento\Backend\App\Action;
+use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Request\DataPersistorInterface;
@@ -35,7 +37,7 @@ class Save extends Action implements HttpPostActionInterface
     private $vendorFactory;
 
     /**
-     * @var Vendor
+     * @var VendorResource
      */
     private $vendorResource;
 
@@ -43,13 +45,13 @@ class Save extends Action implements HttpPostActionInterface
      * @param Context $context
      * @param DataPersistorInterface $dataPersistor
      * @param VendorFactory $vendorFactory
-     * @param Vendor $vendorResource
+     * @param VendorResource $vendorResource
      */
     public function __construct(
         Context $context,
         DataPersistorInterface $dataPersistor,
         VendorFactory $vendorFactory,
-        Vendor $vendorResource
+        VendorResource $vendorResource
     ) {
         $this->dataPersistor = $dataPersistor;
         $this->vendorFactory = $vendorFactory;
@@ -59,11 +61,12 @@ class Save extends Action implements HttpPostActionInterface
 
     /**
      * Save action
+     *
      * @return \Magento\Framework\Controller\ResultInterface
      */
     public function execute()
     {
-        /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+        /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         $data = $this->getRequest()->getPostValue();
         if ($data) {
@@ -78,8 +81,9 @@ class Save extends Action implements HttpPostActionInterface
                 $this->vendorResource->load($model, $id);
                 if (!$model->getId()) {
                     $this->messageManager->addErrorMessage(__('This vendor no longer exists.'));
-                    /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+                    /** @var Redirect $resultRedirect */
                     $resultRedirect = $this->resultRedirectFactory->create();
+
                     return $resultRedirect->setPath('*/*/');
                 }
             }
@@ -90,6 +94,7 @@ class Save extends Action implements HttpPostActionInterface
                 $this->vendorResource->save($model);
                 $this->messageManager->addSuccessMessage(__('You saved the vendor.'));
                 $this->dataPersistor->clear('dmitriyprime_vendor');
+
                 return $this->processReturn($model, $data, $resultRedirect);
             } catch (LocalizedException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
@@ -98,20 +103,31 @@ class Save extends Action implements HttpPostActionInterface
             }
 
             $this->dataPersistor->set('dmitriyprime_vendor', $data);
+
             return $resultRedirect->setPath('*/*/edit', ['entity_id' => $id]);
         }
+
         return $resultRedirect->setPath('*/*/');
     }
 
+    /**
+     * Process back button
+     *
+     * @param Vendor $model
+     * @param array $data
+     * @param Redirect $resultRedirect
+     * @return mixed
+     */
     private function processReturn($model, $data, $resultRedirect)
     {
         $redirect = $data['back'] ?? 'close';
 
         if ($redirect ==='continue') {
             $resultRedirect->setPath('*/*/edit', ['entity_id' => $model->getId()]);
-        } else if ($redirect === 'close') {
+        } elseif ($redirect === 'close') {
             $resultRedirect->setPath('*/*/');
         }
+
         return $resultRedirect;
     }
 }

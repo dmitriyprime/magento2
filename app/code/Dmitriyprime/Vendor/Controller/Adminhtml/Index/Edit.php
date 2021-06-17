@@ -58,6 +58,7 @@ class Edit extends Action implements HttpGetActionInterface
 
     /**
      * Edit vendor entity
+     *
      * @return \Magento\Framework\Controller\ResultInterface
      */
     public function execute()
@@ -73,6 +74,7 @@ class Edit extends Action implements HttpGetActionInterface
                 $this->messageManager->addErrorMessage(__('This vendor no longer exists.'));
                 /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
                 $resultRedirect = $this->resultRedirectFactory->create();
+
                 return $resultRedirect->setPath('*/*/');
             }
         }
@@ -80,7 +82,7 @@ class Edit extends Action implements HttpGetActionInterface
         // Build edit form
         /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
         $resultPage = $this->resultPageFactory->create();
-        //$resultPage->setActiveMenu('Dmitriyprime_Vendor::vendors');
+        $resultPage->setActiveMenu('Dmitriyprime_Vendor::vendors');
         $resultPage->addBreadcrumb(__('Vendors'), __('Vendors'));
         $resultPage->addBreadcrumb(__('Manage Vendors'), __('Manage Vendors'));
         $resultPage->addBreadcrumb(
@@ -89,6 +91,7 @@ class Edit extends Action implements HttpGetActionInterface
         );
         $resultPage->getConfig()->getTitle()->prepend(__('Vendors'));
         $resultPage->getConfig()->getTitle()->prepend($model->getId() ? $model->getTitle() : __('New Vendor'));
+
         return $resultPage;
     }
 }

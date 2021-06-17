@@ -6,7 +6,9 @@ namespace Dmitriyprime\Vendor\Plugin\Api;
 
 use Dmitriyprime\Vendor\Model\ResourceModel\VendorIds;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Api\Data\ProductSearchResultsInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\Api\SearchCriteriaInterface;
 
 /**
  * Product Repository Plugin
@@ -29,13 +31,15 @@ class ProductRepository
 
     /**
      * Loads vendor Ids after getById() method call
+     *
      * @param ProductRepositoryInterface $productRepository
      * @param ProductInterface $product
-     * @param $productId
-     * @param false $editMode
-     * @param null $storeId
-     * @param false $forceReload
+     * @param int $productId
+     * @param bool $editMode
+     * @param int|null $storeId
+     * @param bool $forceReload
      * @return ProductInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGetById(
         ProductRepositoryInterface $productRepository,
@@ -44,21 +48,22 @@ class ProductRepository
         $editMode = false,
         $storeId = null,
         $forceReload = false
-    ): ProductInterface
-    {
+    ): ProductInterface {
         $this->loadVendorIds($product);
         return $product;
     }
 
     /**
      * Loads vendor Ids after get() method call
+     *
      * @param ProductRepositoryInterface $productRepository
      * @param ProductInterface $product
-     * @param $sku
-     * @param false $editMode
-     * @param null $storeId
-     * @param false $forceReload
+     * @param string $sku
+     * @param bool $editMode
+     * @param int|null $storeId
+     * @param bool $forceReload
      * @return ProductInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGet(
         ProductRepositoryInterface $productRepository,
@@ -67,16 +72,38 @@ class ProductRepository
         $editMode = false,
         $storeId = null,
         $forceReload = false
-    ): ProductInterface
-    {
+    ): ProductInterface {
         $this->loadVendorIds($product);
         return $product;
     }
 
     /**
+     * Loads vendor Ids after getList() method call
+     *
+     * @param ProductRepositoryInterface $productRepository
+     * @param ProductSearchResultsInterface $searchResults
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return ProductSearchResultsInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function afterGetList(
+        ProductRepositoryInterface $productRepository,
+        ProductSearchResultsInterface $searchResults,
+        SearchCriteriaInterface $searchCriteria
+    ): ProductSearchResultsInterface {
+        foreach ($searchResults->getItems() as $item) {
+            $this->loadVendorIds($item);
+        }
+        return $searchResults;
+    }
+
+    /**
+     * Saves vendor Ids into DB before save() method call
+     *
      * @param ProductRepositoryInterface $productRepository
      * @param ProductInterface $product
-     * @param false $saveOptions
+     * @param bool $saveOptions
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeSave(
         ProductRepositoryInterface $productRepository,
@@ -89,6 +116,7 @@ class ProductRepository
 
     /**
      * Sets vendor ids to extension attribute vendorId field
+     *
      * @param ProductInterface $product
      */
     private function loadVendorIds(ProductInterface $product): void

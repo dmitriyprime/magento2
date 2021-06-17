@@ -23,6 +23,7 @@ class Vendor extends AbstractDb
 
     /**
      * Returns vendor data containing entity_id and name fields
+     *
      * @return array
      */
     public function getVendorsData(): array

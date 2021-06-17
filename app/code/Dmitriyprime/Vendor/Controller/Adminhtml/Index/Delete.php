@@ -49,6 +49,7 @@ class Delete extends Action implements HttpPostActionInterface
 
     /**
      * Delete action
+     *
      * @return \Magento\Framework\Controller\ResultInterface
      */
     public function execute()
@@ -66,11 +67,13 @@ class Delete extends Action implements HttpPostActionInterface
 
                 // display success message
                 $this->messageManager->addSuccessMessage(__('You deleted the vendor.'));
+
                 // go to grid
                 return $resultRedirect->setPath('*/*/');
             } catch (\Exception $e) {
                 // display error message
                 $this->messageManager->addErrorMessage($e->getMessage());
+
                 // go back to edit form
                 return $resultRedirect->setPath('*/*/edit', ['entity_id' => $id]);
             }

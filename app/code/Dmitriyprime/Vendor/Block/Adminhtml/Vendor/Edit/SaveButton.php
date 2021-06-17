@@ -10,7 +10,7 @@ use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Magento\Ui\Component\Control\Container;
 
 /**
- * Class SaveButton
+ * SaveButton data provider class
  */
 class SaveButton extends GenericButton implements ButtonProviderInterface
 {
@@ -29,6 +29,8 @@ class SaveButton extends GenericButton implements ButtonProviderInterface
     }
 
     /**
+     * Gets Save button data
+     *
      * @return array
      */
     public function getButtonData()
@@ -60,6 +62,7 @@ class SaveButton extends GenericButton implements ButtonProviderInterface
                 'options' => $this->getOptions(),
             ];
         }
+
         return $data;
     }
 

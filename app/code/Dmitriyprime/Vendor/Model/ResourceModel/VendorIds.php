@@ -23,6 +23,7 @@ class VendorIds extends AbstractDb
 
     /**
      * Returns vendor ids
+     *
      * @param int $productId
      * @return array
      */
@@ -36,9 +37,9 @@ class VendorIds extends AbstractDb
         return $adapter->fetchCol($select);
     }
 
-
     /**
      * Save product vendor Ids into DB
+     *
      * @param int $productId
      * @param array $vendorIds
      */

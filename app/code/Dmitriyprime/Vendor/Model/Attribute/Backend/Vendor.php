@@ -30,6 +30,7 @@ class Vendor extends ArrayBackend
 
     /**
      * Saves product vendor Ids into DB
+     *
      * @param \Magento\Framework\DataObject $object
      * @return Vendor
      */
@@ -40,7 +41,7 @@ class Vendor extends ArrayBackend
             $vendorIds = explode(',', $vendorIds);
         }
         $productId = (int) $object->getId();
-        if(!empty($vendorIds)) {
+        if (!empty($vendorIds)) {
             $this->vendorIdsResource->saveProductVendorIds($productId, $vendorIds);
         }
 

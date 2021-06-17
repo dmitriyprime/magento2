@@ -12,7 +12,7 @@ use Magento\Framework\App\Action\HttpGetActionInterface;
 /**
  * Create vendor entity action.
  */
-class NewAction extends Action  implements HttpGetActionInterface
+class NewAction extends Action implements HttpGetActionInterface
 {
     /**
      * Authorization level of a basic admin session
@@ -40,12 +40,14 @@ class NewAction extends Action  implements HttpGetActionInterface
 
     /**
      * Create new vendor entity
+     *
      * @return \Magento\Framework\Controller\ResultInterface
      */
     public function execute()
     {
         /** @var \Magento\Framework\Controller\Result\Forward $resultForward */
         $resultForward = $this->resultForwardFactory->create();
+
         return $resultForward->forward('edit');
     }
 }

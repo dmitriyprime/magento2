@@ -9,7 +9,7 @@ use Magento\Framework\AuthorizationInterface;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
 /**
- * Class DeleteButton
+ * DeleteButton data provider class
  */
 class DeleteButton extends GenericButton implements ButtonProviderInterface
 {
@@ -43,6 +43,7 @@ class DeleteButton extends GenericButton implements ButtonProviderInterface
                 'sort_order' => 20,
             ];
         }
+
         return $data;
     }
 

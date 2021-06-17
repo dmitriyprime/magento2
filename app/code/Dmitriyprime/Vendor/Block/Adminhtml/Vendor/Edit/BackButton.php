@@ -7,11 +7,13 @@ namespace Dmitriyprime\Vendor\Block\Adminhtml\Vendor\Edit;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
 /**
- * Class BackButton
+ * BackButton data provider class
  */
 class BackButton extends GenericButton implements ButtonProviderInterface
 {
     /**
+     * Gets Back button data
+     *
      * @return array
      */
     public function getButtonData()

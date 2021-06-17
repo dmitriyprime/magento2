@@ -34,6 +34,7 @@ class Vendor extends AbstractSource implements OptionSourceInterface
 
     /**
      * Returns all options of vendor attribute entity
+     *
      * @return array|array[]
      */
     public function getAllOptions()
@@ -47,6 +48,7 @@ class Vendor extends AbstractSource implements OptionSourceInterface
             }
             $this->_options = $options;
         }
+
         return $this->_options;
     }
 }

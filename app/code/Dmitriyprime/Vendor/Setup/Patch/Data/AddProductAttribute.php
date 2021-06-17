@@ -30,7 +30,6 @@ class AddProductAttribute implements DataPatchInterface
     private $categorySetupFactory;
 
     /**
-     * PatchInitial constructor.
      * @param ModuleDataSetupInterface $moduleDataSetup
      * @param CategorySetupFactory $categorySetupFactory
      */
@@ -43,7 +42,7 @@ class AddProductAttribute implements DataPatchInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function apply()
     {
@@ -73,10 +72,12 @@ class AddProductAttribute implements DataPatchInterface
             'is_html_allowed_on_front' => true,
             'visible_on_front' => true
         ]);
+
+        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public static function getDependencies()
     {
@@ -84,7 +85,7 @@ class AddProductAttribute implements DataPatchInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getAliases()
     {
