@@ -11,8 +11,8 @@ interface GenerateProductsInterface
      *
      * @param ?string $catName
      * @param ?int $qty
-     * @return array
+     * @return string
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function generate(?string $catName = null, ?int $qty = null): array;
+    public function generate(?string $catName = null, ?int $qty = null): string;
 }

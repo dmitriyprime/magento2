@@ -66,7 +66,7 @@ class GenerateProductsViaApi implements GenerateProductsInterface
      * @return array
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function generate(?string $catName = null, ?int $qty = null): array
+    public function generate(?string $catName = null, ?int $qty = null): string
     {
         $categoryNameConfig = $this->config->getCategoryName();
         $productsQtyToGenerateConfig = $this->config->getProductsQtyToGenerate();
@@ -89,15 +89,15 @@ class GenerateProductsViaApi implements GenerateProductsInterface
                     $this->createProductService->createSimpleProduct($categoryId);
                 }
 
-                return ["message" => "$qty products were created in $categoryName category"];
+                return json_encode(["message" => "$qty products were created in $categoryName category"]);
 
             } else {
                 $this->addItemForProductGenerationByCronService->addItemToSchedule($categoryId, $qty);
 
-                return ["message" => "$qty products were scheduled to generate by cron"];
+                return json_encode(["message" => "$qty products were scheduled to generate by cron"]);
             }
         } catch (\Exception $exception) {
-            return ["message" => $exception->getMessage()];
+            return json_encode(["message" => $exception->getMessage()]);
         }
     }
 }
