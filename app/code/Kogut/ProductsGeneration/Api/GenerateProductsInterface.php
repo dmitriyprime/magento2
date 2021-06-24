@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Kogut\ProductsGeneration\Api;
 
+/**
+ * Generate products interface for rest API endpoint
+ */
 interface GenerateProductsInterface
 {
     /**
@@ -11,8 +14,11 @@ interface GenerateProductsInterface
      *
      * @param ?string $catName
      * @param ?int $qty
-     * @return string
+     * @return \Kogut\ProductsGeneration\Api\Data\GenerateProductsResultInterface
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function generate(?string $catName = null, ?int $qty = null): string;
+    public function generate(
+        ?string $catName = null,
+        ?int $qty = null
+    ): \Kogut\ProductsGeneration\Api\Data\GenerateProductsResultInterface;
 }

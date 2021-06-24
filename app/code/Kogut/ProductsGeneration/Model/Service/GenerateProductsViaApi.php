@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Kogut\ProductsGeneration\Model\Service;
 
+use Kogut\ProductsGeneration\Api\Data\GenerateProductsResultInterface;
 use Kogut\ProductsGeneration\Api\GenerateProductsInterface;
 use Kogut\ProductsGeneration\Model\Config\Settings;
+use Psr\Log\LoggerInterface;
 
 /**
  * Generates products via Api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class GenerateProductsViaApi implements GenerateProductsInterface
 {
@@ -38,24 +41,40 @@ class GenerateProductsViaApi implements GenerateProductsInterface
     private $addItemForProductGenerationByCronService;
 
     /**
+     * @var GenerateProductsResultFactory
+     */
+    private $generateProductsResultFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param Settings $config
      * @param CreateProduct $createProductService
      * @param CreateCategory $createCategoryService
      * @param SearchCategoryByName $searchCategoryByNameService
      * @param AddItemForProductGenerationByCron $addItemForProductGenerationByCronService
+     * @param GenerateProductsResultFactory $generateProductsResultFactory
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Settings $config,
         CreateProduct $createProductService,
         CreateCategory $createCategoryService,
         SearchCategoryByName $searchCategoryByNameService,
-        AddItemForProductGenerationByCron $addItemForProductGenerationByCronService
+        AddItemForProductGenerationByCron $addItemForProductGenerationByCronService,
+        GenerateProductsResultFactory $generateProductsResultFactory,
+        LoggerInterface $logger
     ) {
         $this->config = $config;
         $this->createProductService = $createProductService;
         $this->createCategoryService = $createCategoryService;
         $this->searchCategoryByNameService = $searchCategoryByNameService;
         $this->addItemForProductGenerationByCronService = $addItemForProductGenerationByCronService;
+        $this->generateProductsResultFactory = $generateProductsResultFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -63,10 +82,10 @@ class GenerateProductsViaApi implements GenerateProductsInterface
      *
      * @param ?string $catName
      * @param ?int $qty
-     * @return array
+     * @return GenerateProductsResultInterface
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function generate(?string $catName = null, ?int $qty = null): string
+    public function generate(?string $catName = null, ?int $qty = null): GenerateProductsResultInterface
     {
         $categoryNameConfig = $this->config->getCategoryName();
         $productsQtyToGenerateConfig = $this->config->getProductsQtyToGenerate();
@@ -88,16 +107,31 @@ class GenerateProductsViaApi implements GenerateProductsInterface
                 for ($i = 0; $i < $qty; $i++) {
                     $this->createProductService->createSimpleProduct($categoryId);
                 }
+                /** @var \Kogut\ProductsGeneration\Model\Service\GenerateProductsResult $result */
+                $result = $this->generateProductsResultFactory->create();
+                $result->setMessage("$qty products were created in $categoryName category");
+                $result->setQty($qty);
+                $result->setCatName($categoryName);
 
-                return json_encode(["message" => "$qty products were created in $categoryName category"]);
+                return $result;
 
             } else {
                 $this->addItemForProductGenerationByCronService->addItemToSchedule($categoryId, $qty);
+                /** @var \Kogut\ProductsGeneration\Model\Service\GenerateProductsResult $result */
+                $result = $this->generateProductsResultFactory->create();
+                $result->setMessage("$qty products were scheduled to generate by cron in $categoryName category");
+                $result->setQty($qty);
+                $result->setCatName($categoryName);
 
-                return json_encode(["message" => "$qty products were scheduled to generate by cron"]);
+                return $result;
             }
-        } catch (\Exception $exception) {
-            return json_encode(["message" => $exception->getMessage()]);
+        } catch (\Throwable $exception) {
+            $this->logger->error($exception);
+            /** @var \Kogut\ProductsGeneration\Model\Service\GenerateProductsResult $result */
+            $result = $this->generateProductsResultFactory->create();
+            $result->setMessage("Something went wrong. See exception log for details.");
+
+            return $result;
         }
     }
 }
