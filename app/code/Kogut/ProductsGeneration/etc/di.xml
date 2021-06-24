@@ -7,4 +7,10 @@
             </argument>
         </arguments>
     </type>
+    <preference for="Kogut\ProductsGeneration\Api\GenerateProductsInterface"
+                type="Kogut\ProductsGeneration\Model\Service\GenerateProductsViaApi"
+    />
+    <preference for="Kogut\ProductsGeneration\Api\Data\GenerateProductsResultInterface"
+                type="Kogut\ProductsGeneration\Model\Service\GenerateProductsResult"
+    />
 </config>
