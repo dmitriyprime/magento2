@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content.aside">
+            <block class="Magento\Catalog\Block\Product\ProductList\Related" name="catalog.product.related.additional"
+                   after="catalog.product.related" template="Dmitriyprime_RelatedProductsList::product/list/items.phtml"
+                   ifconfig="catalog/frontend/show_related_products"
+            >
+                <arguments>
+                    <argument name="type" xsi:type="string">related-custom</argument>
+                    <argument name="view_model" xsi:type="object">Magento\Catalog\ViewModel\Product\Listing\PreparePostData</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

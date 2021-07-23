@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="catalog">
+            <group id="frontend">
+                <field id="show_related_products" translate="label comment" type="select" sortOrder="325" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Show related products list</label>
+                    <comment>Whether to show a list of related products for which the current product is related.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
