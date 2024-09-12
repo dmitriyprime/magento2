@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Dmitriyprime_Vendor::vendors" title="Vendors" translate="title" module="Dmitriyprime_Vendor"
+             sortOrder="100" parent="Magento_Catalog::inventory" action="dmitriyprime_vendor/index/index"
+             resource="Dmitriyprime_Vendor::vendors" dependsOnModule="Magento_Catalog"/>
+    </menu>
+</config>

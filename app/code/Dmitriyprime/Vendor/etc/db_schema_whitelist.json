@@ -1,0 +1,28 @@
+{
+    "dmitriyprime_vendors": {
+        "column": {
+            "entity_id": true,
+            "name": true,
+            "address": true,
+            "phone": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "dmitriyprime_vendors_link": {
+        "column": {
+            "vendor_id": true,
+            "product_id": true
+        },
+        "index": {
+            "DMITRIYPRIME_VENDORS_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "DMITRIYPRIME_VENDORS_VENDOR_ID_ENTITY_ID": true,
+            "DMITRIYPRIME_VENDORS_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true,
+            "DMITRIYPRIME_VENDORS_VENDOR_ID_PRODUCT_ID": true
+        }
+    }
+}
