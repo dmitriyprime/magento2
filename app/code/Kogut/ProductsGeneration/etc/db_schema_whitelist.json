@@ -1,0 +1,12 @@
+{
+    "kogut_products_generation": {
+        "column": {
+            "entity_id": true,
+            "category_id": true,
+            "qty": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

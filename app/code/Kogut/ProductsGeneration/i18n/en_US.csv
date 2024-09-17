@@ -1,0 +1,4 @@
+"Category %1 is created", "Category %1 is created"
+"%1 new products are generated", "%1 new products are generated"
+"Are you sure you want to generate %1 products?", "Are you sure you want to generate %1 products?"
+"%1 products are scheduled for generation by cron job.", "%1 products are scheduled for generation by cron job."
