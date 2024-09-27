@@ -1,0 +1,17 @@
+{
+    "customer_entity": {
+        "column": {
+            "customer_tax_id": true
+        }
+    },
+    "sales_order": {
+        "column": {
+            "customer_tax_id": true
+        }
+    },
+    "quote": {
+        "column": {
+            "customer_tax_id": true
+        }
+    }
+}
